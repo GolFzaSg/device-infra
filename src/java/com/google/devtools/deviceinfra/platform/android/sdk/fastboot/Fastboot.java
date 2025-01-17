@@ -388,8 +388,10 @@ public class Fastboot {
   public String getVar(String serial, FastbootProperty key)
       throws MobileHarnessException, InterruptedException {
     checkFastboot();
+    // Handle vars like "sbdp:allow", which will be represented in enum as "sbdp_allow".
+    String keyName = Ascii.toLowerCase(key.name()).replace("sbdp_", "sbdp:");
     // Handle vars like "current-slot", which will be represented in enum as "current_slot".
-    String keyName = Ascii.toLowerCase(key.name()).replace('_', '-');
+    keyName = keyName.replace("_", "-");
     String[] command = new String[] {"getvar", keyName};
     String output =
         runWithRetry(serial, command, Duration.ofSeconds(10L), /* flashSemaphore= */ false);
